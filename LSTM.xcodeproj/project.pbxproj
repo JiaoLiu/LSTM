@@ -10,6 +10,7 @@
 		0F52F66B1DD3199900BEF524 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 0F52F66A1DD3199900BEF524 /* main.m */; };
 		0F52F6731DD31B0F00BEF524 /* MLRnn.m in Sources */ = {isa = PBXBuildFile; fileRef = 0F52F6721DD31B0F00BEF524 /* MLRnn.m */; };
 		0F52F6751DD31B2000BEF524 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F52F6741DD31B2000BEF524 /* Accelerate.framework */; };
+		0FA7B7CB1DD6C4FF00026E96 /* MLLstm.m in Sources */ = {isa = PBXBuildFile; fileRef = 0FA7B7CA1DD6C4FF00026E96 /* MLLstm.m */; };
 		0FBF3AA91DD464CE00195B38 /* MLLoadMNIST.m in Sources */ = {isa = PBXBuildFile; fileRef = 0FBF3AA61DD464CE00195B38 /* MLLoadMNIST.m */; };
 		0FBF3AAA1DD464CE00195B38 /* MLSoftMax.m in Sources */ = {isa = PBXBuildFile; fileRef = 0FBF3AA81DD464CE00195B38 /* MLSoftMax.m */; };
 /* End PBXBuildFile section */
@@ -32,6 +33,8 @@
 		0F52F6711DD31B0F00BEF524 /* MLRnn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLRnn.h; sourceTree = "<group>"; };
 		0F52F6721DD31B0F00BEF524 /* MLRnn.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLRnn.m; sourceTree = "<group>"; };
 		0F52F6741DD31B2000BEF524 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
+		0FA7B7C91DD6C4FF00026E96 /* MLLstm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLLstm.h; sourceTree = "<group>"; };
+		0FA7B7CA1DD6C4FF00026E96 /* MLLstm.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLLstm.m; sourceTree = "<group>"; };
 		0FBF3AA51DD464CE00195B38 /* MLLoadMNIST.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLLoadMNIST.h; sourceTree = "<group>"; };
 		0FBF3AA61DD464CE00195B38 /* MLLoadMNIST.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLLoadMNIST.m; sourceTree = "<group>"; };
 		0FBF3AA71DD464CE00195B38 /* MLSoftMax.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLSoftMax.h; sourceTree = "<group>"; };
@@ -77,6 +80,8 @@
 				0FBF3AA81DD464CE00195B38 /* MLSoftMax.m */,
 				0F52F6711DD31B0F00BEF524 /* MLRnn.h */,
 				0F52F6721DD31B0F00BEF524 /* MLRnn.m */,
+				0FA7B7C91DD6C4FF00026E96 /* MLLstm.h */,
+				0FA7B7CA1DD6C4FF00026E96 /* MLLstm.m */,
 			);
 			path = LSTM;
 			sourceTree = "<group>";
@@ -142,6 +147,7 @@
 				0FBF3AAA1DD464CE00195B38 /* MLSoftMax.m in Sources */,
 				0FBF3AA91DD464CE00195B38 /* MLLoadMNIST.m in Sources */,
 				0F52F6731DD31B0F00BEF524 /* MLRnn.m in Sources */,
+				0FA7B7CB1DD6C4FF00026E96 /* MLLstm.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

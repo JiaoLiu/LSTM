@@ -73,7 +73,7 @@
         }
         else
         {
-            input[i] = (exp(num) - exp(num)) / (exp(num) + exp(num));
+            input[i] = (exp(num) - exp(-num)) / (exp(num) + exp(-num));
         }
     }
     return input;
@@ -107,8 +107,10 @@
     _inWeight = [MLRnn weight_init:_nodeNum * _dataDim];
     _outWeight = [MLRnn weight_init:_nodeNum * _dataDim];
     _flowWeight = [MLRnn weight_init:_nodeNum * _nodeNum];
-    _outBias = calloc(_dataDim, sizeof(double));
-    _flowBias = calloc(_nodeNum, sizeof(double));
+//    _outBias = calloc(_dataDim, sizeof(double));
+//    _flowBias = calloc(_nodeNum, sizeof(double));
+    _outBias = [MLRnn bias_init:_dataDim];
+    _flowBias = [MLRnn bias_init:_nodeNum];
     _output = calloc(_layerSize * _dataDim, sizeof(double));
     _state = calloc(_layerSize * _nodeNum, sizeof(double));
 }
