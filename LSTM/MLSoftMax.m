@@ -26,7 +26,8 @@
         double fillNum = 0.0f;
         vDSP_vfillD(&fillNum, _bias, 1, type);
         vDSP_vfillD(&fillNum, _theta, 1, type * dim);
-        _rnn = [[MLRnn alloc] initWithNodeNum:50 layerSize:28 dataDim:28];
+//        _rnn = [[MLRnn alloc] initWithNodeNum:50 layerSize:28 dataDim:28];
+        _lstm = [[MLLstm alloc] initWithNodeNum:100 layerSize:28 dataDim:28];
     }
     return  self;
 }
@@ -109,7 +110,11 @@
 //            printf("%f ", backLoss[k]);
 //        }
 //        printf("\n%d-------\n",pos);
-        [_rnn backPropagation:backLoss];
+        [_lstm backPropagation:backLoss];
+//        [_rnn backPropagation:backLoss];
+//        [_rnn backPropagation:[_lstm backPropagation:backLoss]];
+        free(backLoss);
+        
         vDSP_vaddD((_theta + i * _dim), 1, decay, 1, (_theta + i * _dim), 1, _dim);
         if (decay != NULL) {
             free(decay);
@@ -128,7 +133,8 @@
         [self randomPick:_trainNum];
         for (int j = 0; j < _randSize; j++) {
             // calculate wx+b
-            _randomX[j] = [_rnn forwardPropagation:_randomX[j]];
+//            _randomX[j] = [_rnn forwardPropagation:_randomX[j]];
+            _randomX[j] = [_lstm forwardPropagation:_randomX[j]];
             vDSP_mmulD(_theta, 1, _randomX[j], 1, index, 1, _kType, 1, _dim);
             vDSP_vaddD(index, 1, _bias, 1, index, 1, _kType);
             // calulate exp(wx+b) / sum(exp(wx+b))
@@ -273,7 +279,8 @@
     vDSP_Length label = 0;
     double *index = malloc(sizeof(double) * _kType);
 //    vDSP_mmulD(_theta, 1, image, 1, index, 1, _kType, 1, _dim);
-    double *input = [_rnn forwardPropagation:image];
+//    double *input = [_rnn forwardPropagation:image];
+    double *input = [_lstm forwardPropagation:image];
     vDSP_mmulD(_theta, 1, input, 1, index, 1, _kType, 1, _dim);
     vDSP_vaddD(index, 1, _bias, 1, index, 1, _kType);
     vDSP_maxviD(index, 1, &maxNum, &label, _kType);
@@ -309,7 +316,8 @@
 {
     double *index = malloc(sizeof(double) * _kType);
     // calculate wx+b
-    double *input = [_rnn forwardPropagation:image];
+//    double *input = [_rnn forwardPropagation:image];
+    double *input = [_lstm forwardPropagation:image];
     vDSP_mmulD(_theta, 1, input, 1, index, 1, _kType, 1, _dim);
     vDSP_vaddD(index, 1, _bias, 1, index, 1, _kType);
     // calulate exp(wx+b) / sum(exp(wx+b))
@@ -329,7 +337,8 @@
         vDSP_vsmulD(image, 1, &loss, decay, 1, _dim);
         double *backLoss = malloc(sizeof(double) * _dim);
         vDSP_vsmulD((_theta + i * _dim), 1, &loss, backLoss, 1, _dim);
-        [_rnn backPropagation:backLoss];
+//        [_rnn backPropagation:backLoss];
+        [_lstm backPropagation:backLoss];
         vDSP_vaddD((_theta + i * _dim), 1, decay, 1, (_theta + i * _dim), 1, _dim);
         if (decay != NULL) {
             free(decay);

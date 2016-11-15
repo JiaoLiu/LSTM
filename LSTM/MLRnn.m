@@ -113,6 +113,7 @@
     _flowBias = [MLRnn bias_init:_nodeNum];
     _output = calloc(_layerSize * _dataDim, sizeof(double));
     _state = calloc(_layerSize * _nodeNum, sizeof(double));
+    _backLoss = calloc(_layerSize * _dataDim, sizeof(double));
 }
 
 #pragma mark - Main Method
@@ -124,6 +125,7 @@
     double zero = 0;
     vDSP_vfillD(&zero, _output, 1, _layerSize * _dataDim);
     vDSP_vfillD(&zero, _state, 1, _layerSize * _nodeNum);
+    vDSP_vfillD(&zero, _backLoss, 1, _layerSize * _dataDim);
     
     for (int i = 0; i < _layerSize; i++) {
         double *temp1 = calloc(_nodeNum, sizeof(double));
@@ -151,7 +153,7 @@
     return _output;
 }
 
-- (void)backPropagation:(double *)loss
+- (double *)backPropagation:(double *)loss
 {
     double *flowLoss = calloc(_nodeNum, sizeof(double));
     for (int i = _layerSize - 1; i >= 0 ; i--) {
@@ -184,7 +186,11 @@
             vDSP_vaddD(_flowWeight, 1, flowWeightLoss, 1, _flowWeight, 1, _nodeNum * _nodeNum);
             free(flowWeightLoss);
         }
-
+        
+        double *inTW = calloc(_dataDim * _nodeNum, sizeof(double));
+        vDSP_mtransD(_inWeight, 1, inTW, 1, _dataDim, _nodeNum);
+        vDSP_mmulD(inTW, 1, tanhLoss, 1, (_backLoss + i * _dataDim), 1, _dataDim, 1, _nodeNum);
+        
         double *inWeightLoss = calloc(_nodeNum * _dataDim, sizeof(double));
         vDSP_mmulD(tanhLoss, 1, (_input + i * _dataDim), 1, inWeightLoss, 1, _nodeNum, _dataDim, 1);
         vDSP_vaddD(_inWeight, 1, inWeightLoss, 1, _inWeight, 1, _nodeNum * _dataDim);
@@ -200,9 +206,10 @@
         free(tanhIn);
         free(one);
         free(inWeightLoss);
+        free(inTW);
     }
     free(flowLoss);
-    free(loss);
+    return _backLoss;
 }
 
 @end

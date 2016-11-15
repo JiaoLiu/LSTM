@@ -20,6 +20,7 @@
     double *_output;
     double *_state;
     double *_input;
+    double *_backLoss;
 }
 
 @property (nonatomic, assign)int nodeNum; // num of node in each neuron
@@ -28,6 +29,6 @@
 
 - (id)initWithNodeNum:(int)num layerSize:(int)size dataDim:(int)dim;
 - (double *)forwardPropagation:(double *)input;
-- (void)backPropagation:(double *)loss;
+- (double *)backPropagation:(double *)loss;
 
 @end

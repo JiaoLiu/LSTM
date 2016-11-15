@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <Accelerate/Accelerate.h>
 #import "MLRnn.h"
+#import "MLLstm.h"
 
 @interface MLSoftMax : NSObject
 {
@@ -21,6 +22,7 @@
     double *_theta;
     double *_bias;
     MLRnn *_rnn;
+    MLLstm *_lstm;
 }
 
 @property (nonatomic, assign) double **image;

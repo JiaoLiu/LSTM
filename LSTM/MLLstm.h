@@ -18,6 +18,7 @@
     double *_zState;
     double *_hbState;
     double *_output;
+    double *_backLoss;
     
     double *_rW;
     double *_rU;
@@ -38,6 +39,6 @@
 
 - (id)initWithNodeNum:(int)num layerSize:(int)size dataDim:(int)dim;
 - (double *)forwardPropagation:(double *)input;
-- (void)backPropagation:(double *)loss;
+- (double *)backPropagation:(double *)loss;
 
 @end

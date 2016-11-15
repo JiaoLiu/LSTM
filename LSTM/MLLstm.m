@@ -128,6 +128,7 @@
     _zState = calloc(_layerSize * _nodeNum, sizeof(double));
     _hbState = calloc(_layerSize * _nodeNum, sizeof(double));
     _output = calloc(_layerSize * _dataDim, sizeof(double));
+    _backLoss = calloc(_layerSize * _dataDim, sizeof(double));
     
     _rW = [MLLstm weight_init:_nodeNum * _dataDim];
     _rU = [MLLstm weight_init:_nodeNum * _nodeNum];
@@ -152,6 +153,7 @@
     vDSP_vfillD(&zero, _rState, 1, _layerSize * _nodeNum);
     vDSP_vfillD(&zero, _zState, 1, _layerSize * _nodeNum);
     vDSP_vfillD(&zero, _hbState, 1, _layerSize * _nodeNum);
+    vDSP_vfillD(&zero, _backLoss, 1, _layerSize * _dataDim);
     
     double *temp1 = calloc(_nodeNum, sizeof(double));
     double *temp2 = calloc(_nodeNum, sizeof(double));
@@ -230,7 +232,7 @@
     return _output;
 }
 
-- (void)backPropagation:(double *)loss
+- (double *)backPropagation:(double *)loss
 {
     double *flowLoss = calloc(_nodeNum, sizeof(double));
     double *outTW = calloc(_nodeNum * _dataDim, sizeof(double));
@@ -244,6 +246,8 @@
     double *rLoss = calloc(_nodeNum, sizeof(double));
     double *tU = calloc(_nodeNum * _nodeNum, sizeof(double));
     double *uLoss = calloc(_nodeNum * _nodeNum, sizeof(double));
+    double *tW = calloc(_dataDim * _nodeNum, sizeof(double));
+    double *temp2 = calloc(_dataDim, sizeof(double));
     for (int i = _layerSize - 1; i >= 0; i--) {
         // update output parameters
         vDSP_vaddD(_outBias, 1, (loss + i * _dataDim), 1, _outBias, 1, _dataDim);
@@ -280,6 +284,9 @@
         
         // update h`(t) parameters
         vDSP_vaddD(_hBias, 1, hbLoss, 1, _hBias, 1, _nodeNum);
+        vDSP_mtransD(_hW, 1, tW, 1, _dataDim, _nodeNum);
+        vDSP_mmulD(tW, 1, hbLoss, 1, temp2, 1, _dataDim, 1, _nodeNum);
+        vDSP_vaddD((_backLoss + i * _dataDim), 1, temp2, 1, (_backLoss + i * _dataDim), 1, _dataDim);
         vDSP_mmulD(hbLoss, 1, (_input + i * _dataDim), 1, inWLoss, 1, _nodeNum, _dataDim, 1);
         vDSP_vaddD(_hW, 1, inWLoss, 1, _hW, 1, _nodeNum * _dataDim);
 
@@ -302,6 +309,9 @@
         
         // update z(t) parameters
         vDSP_vaddD(_zBias, 1, zLoss, 1, _zBias, 1, _nodeNum);
+        vDSP_mtransD(_zW, 1, tW, 1, _dataDim, _nodeNum);
+        vDSP_mmulD(tW, 1, zLoss, 1, temp2, 1, _dataDim, 1, _nodeNum);
+        vDSP_vaddD((_backLoss + i * _dataDim), 1, temp2, 1, (_backLoss + i * _dataDim), 1, _dataDim);
         vDSP_mmulD(zLoss, 1, (_input + i * _dataDim), 1, inWLoss, 1, _nodeNum, _dataDim, 1);
         vDSP_vaddD(_zW, 1, inWLoss, 1, _zW, 1, _nodeNum * _dataDim);
         
@@ -317,6 +327,9 @@
         // update r(t) parameters
         if (i > 0) {
             vDSP_vaddD(_rBias, 1, rLoss, 1, _rBias, 1, _nodeNum);
+            vDSP_mtransD(_rW, 1, tW, 1, _dataDim, _nodeNum);
+            vDSP_mmulD(tW, 1,rLoss, 1, temp2, 1, _dataDim, 1, _nodeNum);
+            vDSP_vaddD((_backLoss + i * _dataDim), 1, temp2, 1, (_backLoss + i * _dataDim), 1, _dataDim);
             vDSP_mmulD(rLoss, 1, (_input + i * _dataDim), 1, inWLoss, 1, _nodeNum, _dataDim, 1);
             vDSP_vaddD(_rW, 1, inWLoss, 1, _rW, 1, _nodeNum * _dataDim);
             
@@ -329,7 +342,6 @@
         }
     }
     
-    free(loss);
     free(flowLoss);
     free(outTW);
     free(outLoss);
@@ -342,6 +354,9 @@
     free(rLoss);
     free(tU);
     free(uLoss);
+    free(tW);
+    free(temp2);
+    return _backLoss;
 }
 
 @end
