@@ -27,7 +27,7 @@
         vDSP_vfillD(&fillNum, _bias, 1, type);
         vDSP_vfillD(&fillNum, _theta, 1, type * dim);
 //        _rnn = [[MLRnn alloc] initWithNodeNum:50 layerSize:28 dataDim:28];
-        _lstm = [[MLLstm alloc] initWithNodeNum:100 layerSize:28 dataDim:28];
+        _lstm = [[MLLstm alloc] initWithNodeNum:500 layerSize:28 dataDim:28];
     }
     return  self;
 }

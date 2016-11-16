@@ -16,7 +16,7 @@ int main(int argc, const char * argv[]) {
         double **trainImage = [loader readImageData:("/Users/Jiao/Desktop/SecurityKeeper/MNIST/train-images-idx3-ubyte")];
         int *trainLabel = [loader readLabelData:("/Users/Jiao/Desktop/SecurityKeeper/MNIST/train-labels-idx1-ubyte")];
         
-        MLSoftMax *softMax = [[MLSoftMax alloc] initWithLoopNum:1300 dim:784 type:10 size:100 descentRate:0.01];
+        MLSoftMax *softMax = [[MLSoftMax alloc] initWithLoopNum:1300 dim:784 type:10 size:5 descentRate:0.01];
         softMax.image = trainImage;
         softMax.label = trainLabel;
         softMax.trainNum = 60000;
